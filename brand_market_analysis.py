@@ -396,3 +396,55 @@ ridge.fit(X_train, y_train)
 
 # Print the coefficients of the model
 print("Coefficients: ", ridge.coef_)
+
+# 2. Time Series
+
+# Plotting Gross Sales to visualize trends and seasonality.
+plt.figure(figsize=(10, 6))
+plt.plot(df['Gross Sales'], marker='o', label='Gross Sales')
+plt.title('Gross Sales Time Series')
+plt.xlabel('Period')
+plt.ylabel('Gross Sales')
+plt.grid(True)
+plt.show()
+
+# Add a small constant to avoid zero and negative values
+small_constant = 1e-10
+adjusted_gross_sales = df['Gross Sales'] + small_constant
+
+# Using seasonal_decompose from statsmodels to observe trend and seasonality more clearly.
+result = seasonal_decompose(adjusted_gross_sales, model='multiplicative', period=12)
+
+# Customize the plot layout for better visibility
+plt.figure(figsize=(12, 8))
+
+# Original time series
+plt.subplot(4, 1, 1)
+plt.plot(adjusted_gross_sales, label='Original')
+plt.title('Original Time Series')
+plt.legend()
+
+# Trend component
+plt.subplot(4, 1, 2)
+plt.plot(result.trend, label='Trend')
+plt.title('Trend Component')
+plt.legend()
+
+# Seasonal component
+plt.subplot(4, 1, 3)
+plt.plot(result.seasonal, label='Seasonal')
+plt.title('Seasonal Component')
+plt.legend()
+
+# Residual component
+plt.subplot(4, 1, 4)
+plt.plot(result.resid, label='Residual')
+plt.title('Residual Component')
+plt.legend()
+
+# Adjust layout for better spacing
+plt.tight_layout()
+plt.show()
+
+
+

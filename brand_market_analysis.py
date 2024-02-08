@@ -273,3 +273,77 @@ least_popular_pack = total_volume_pack.idxmin()
 # Print the results
 print("Most Popular Product Pack for each Brand and Store:\n", most_popular_pack)
 print("\nLeast Popular Product Pack for each Brand and Store:\n", least_popular_pack)
+
+# Visualizing Key Metrics
+
+# 1. Brand Perfomance
+
+# Group the data by 'Brand'
+grouped = df.groupby('Brand')
+
+# Calculate total 'Volume' and 'Net Sales' for each brand
+total_volume = grouped['Volume'].sum()
+total_net_sales = grouped['Net Sales'].sum()
+
+# Plot total 'Volume' and 'Net Sales' for each brand
+fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(10, 8))
+total_volume.plot(kind='bar', ax=axes[0], color='blue')
+axes[0].set_title('Total Sales Volume for each Brand')
+axes[0].set_ylabel('Total Sales Volume')
+total_net_sales.plot(kind='bar', ax=axes[1], color='green')
+axes[1].set_title('Total Net Sales for each Brand')
+axes[1].set_ylabel('Total Net Sales')
+plt.tight_layout()
+plt.show()
+
+# 2. Store Performance
+
+# Group the data by 'Client Type'
+grouped = df.groupby('Client Type')
+
+# Calculate total 'Volume' and 'Net Sales' for each client type
+total_volume = grouped['Volume'].sum()
+total_net_sales = grouped['Net Sales'].sum()
+
+# Plot total 'Volume' and 'Net Sales' for each client type
+fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(10, 8))
+total_volume.plot(kind='bar', ax=axes[0], color='blue')
+axes[0].set_title('Total Sales Volume for each Client Type')
+axes[0].set_ylabel('Total Sales Volume')
+total_net_sales.plot(kind='bar', ax=axes[1], color='green')
+axes[1].set_title('Total Net Sales for each Client Type')
+axes[1].set_ylabel('Total Net Sales')
+plt.tight_layout()
+plt.show()
+
+# 3. Discount Impact
+
+# Calculate correlation between 'Discounts' and 'Volume' for each brand
+grouped = df.groupby('Brand')
+correlations = grouped.apply(lambda x: x['Discounts'].corr(x['Volume']))
+
+# Plot correlation between 'Discounts' and 'Volume' for each brand
+correlations.plot(kind='barh', figsize=(10, 6), color='purple')
+plt.title('Correlation between Discounts and Sales Volume for each Brand')
+plt.xlabel('Correlation')  # Change ylabel to xlabel
+plt.show()
+
+# 4. Cost Efficiency
+
+# Group the data by 'Brand'
+grouped = df.groupby('Brand')
+
+# Calculate total costs (COGS, distribution, and warehousing) for each brand
+total_costs = grouped[['Cost of Goods Sold', 'Distribution', 'Warehousing']].sum().sum(axis=1)
+
+# Calculate total net sales for each brand
+total_net_sales = grouped['Net Sales'].sum()
+
+# Calculate the ratio of total costs to net sales
+cost_efficiency = total_costs / total_net_sales
+
+# Plot cost efficiency for each brand (horizontal bar chart)
+cost_efficiency.plot(kind='barh', figsize=(10, 6), color='orange')
+plt.title('Cost Efficiency for each Brand')
+plt.xlabel('Cost Efficiency')  # Change ylabel to xlabel
+plt.show()

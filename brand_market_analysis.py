@@ -38,3 +38,41 @@ df.head()
 df.dtypes
 
 df.shape
+
+# Convert 'Period' to datetime format
+df['Period'] = pd.to_datetime(df['Period'], format='%Y%m')
+
+# Set 'Period' as the index of the DataFrame
+df.set_index('Period', inplace=True)
+
+# Create line plots for time-series data
+fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(10, 8))
+
+sns.lineplot(data=df['Gross Sales'], ax=axes[0], color='blue')
+axes[0].set_title('Gross Sales over time')
+axes[0].set_ylabel('Gross Sales')
+
+sns.lineplot(data=df['Net Sales'], ax=axes[1], color='green')
+axes[1].set_title('Net Sales over time')
+axes[1].set_ylabel('Net Sales')
+
+plt.tight_layout()
+plt.show()
+
+# Create histograms for distribution of continuous data
+fig, axes = plt.subplots(nrows=2, ncols=1, figsize=(10, 8))
+
+# Histogram for Gross Sales
+axes[0].hist(df['Gross Sales'], bins=30, color='blue', alpha=0.7, density=True)
+axes[0].set_title('Distribution of Gross Sales')
+axes[0].set_xlabel('Gross Sales')
+axes[0].set_ylabel('Density')
+
+# Histogram for Net Sales
+axes[1].hist(df['Net Sales'], bins=30, color='green', alpha=0.7, density=True)
+axes[1].set_title('Distribution of Net Sales')
+axes[1].set_xlabel('Net Sales')
+axes[1].set_ylabel('Density')
+
+plt.tight_layout()
+plt.show()

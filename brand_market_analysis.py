@@ -15,6 +15,12 @@ from IPython.display import display, clear_output
 from tkinter import Tk, filedialog
 import numpy_financial as npf
 import statsmodels.api as sm
+from statsmodels.tsa.seasonal import seasonal_decompose
+from sklearn.linear_model import Ridge
+from sklearn.model_selection import train_test_split
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 # Load the data
 
@@ -370,8 +376,6 @@ results = model.fit()
 # Print the summary statistics of the regression model
 print(results.summary())
 
-from statsmodels.stats.outliers_influence import variance_inflation_factor
-
 # Calculate VIF for each independent variable
 X = df[['Discounts', 'Total Costs']]
 vif = pd.DataFrame()
@@ -379,9 +383,6 @@ vif["VIF Factor"] = [variance_inflation_factor(X.values, i) for i in range(X.sha
 vif["features"] = X.columns
 
 print(vif)
-
-from sklearn.linear_model import Ridge
-from sklearn.model_selection import train_test_split
 
 # Define the independent variables (Discounts and Total Costs) and the dependent variable (Net Sales)
 X = df[['Discounts', 'Total Costs']]
@@ -446,5 +447,27 @@ plt.legend()
 plt.tight_layout()
 plt.show()
 
+
+# 3. Clustering Model
+
+# Select relevant columns for clustering
+df_cluster = df[['Gross Sales', 'Net Sales', 'Cost of Goods Sold', 'Distribution', 'Warehousing']]
+
+# Convert categorical variables to numeric using get_dummies (one-hot encoding)
+df_cluster = pd.get_dummies(df_cluster)
+
+# Standardize the data to have a mean of ~0 and a variance of 1
+scaler = StandardScaler()
+X_std = scaler.fit_transform(df_cluster)
+
+# Run KMeans
+kmeans = KMeans(n_clusters=3, random_state=30)  # You can change the number of clusters
+kmeans.fit(X_std)
+
+# Add the cluster labels for each data point to the dataframe
+df_cluster['Cluster'] = kmeans.labels_
+
+# Print out the first few rows of the dataframe
+print(df_cluster.head())
 
 

@@ -21,6 +21,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from statsmodels.stats.outliers_influence import variance_inflation_factor
+from mlxtend.frequent_patterns import apriori
+from mlxtend.frequent_patterns import association_rules
 
 # Load the data
 
@@ -470,4 +472,55 @@ df_cluster['Cluster'] = kmeans.labels_
 # Print out the first few rows of the dataframe
 print(df_cluster.head())
 
+# The Collaborative Filtering Approach
 
+df['Net Sales'] = df['Net Sales'].astype(float)
+
+# Convert categorical variables to category type
+df['Client'] = df['Client'].astype('category')
+df['Client Type'] = df['Client Type'].astype('category')
+df['Brand'] = df['Brand'].astype('category')
+
+# Create mappings between numerical codes and actual names
+client_type_mapping = dict(enumerate(df['Client Type'].cat.categories))
+brand_mapping = dict(enumerate(df['Brand'].cat.categories))
+
+# Convert categorical variables to numerical IDs
+df['Client'] = df['Client'].cat.codes
+df['Client Type'] = df['Client Type'].cat.codes
+df['Brand'] = df['Brand'].cat.codes
+
+# Group by 'Client Type' and 'Brand' and sum 'Net Sales'
+df = df.groupby(['Client Type', 'Brand'])['Net Sales'].sum().reset_index()
+
+# Split the data into training and testing sets
+train_data, test_data = train_test_split(df, test_size=0.2, random_state=42)
+
+# Create a user-item matrix based on 'Client Type'
+user_item_matrix = pd.pivot_table(train_data, values='Net Sales', index='Client Type', columns='Brand', fill_value=0)
+
+# Calculate cosine similarity between users
+user_similarity = cosine_similarity(user_item_matrix)
+
+# Function to predict Net Sales for a given user and Brand
+def predict_net_sales(user_type, brand):
+    # Convert numerical indices back to actual names
+    user_type_name = client_type_mapping[user_type]
+    brand_name = brand_mapping[brand]
+
+    user_row = user_item_matrix.loc[user_type_name].values.reshape(1, -1)
+    brand_col = user_item_matrix[brand_name].values.reshape(-1, 1)
+    
+    sim_users = user_similarity[user_type]
+    predicted_net_sales = sim_users.dot(brand_col).flatten()[0] / sim_users.sum()
+
+    return predicted_net_sales
+
+# Example: Get predictions for a specific client type and Brand
+user_type = df['Client Type'].iloc[0]
+brands = df['Brand'].unique()
+
+for brand_code in brands:
+    brand_name = brand_mapping.get(brand_code, f'Unknown Brand {brand_code}')
+    predicted_sales = predict_net_sales(user_type, brand_name)
+    print(f"Predicted Net Sales for Brand {brand_name} and Client Type {client_type_mapping[user_type]}: {predicted_sales}")

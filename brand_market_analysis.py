@@ -76,3 +76,118 @@ axes[1].set_ylabel('Density')
 
 plt.tight_layout()
 plt.show()
+
+# Brand Performance:
+
+# Group the data by 'Brand'
+grouped = df.groupby('Brand')
+
+# Calculate total and average 'Volume' and 'Net Sales' for each brand
+total_volume = grouped['Volume'].sum()
+average_volume = grouped['Volume'].mean()
+total_net_sales = grouped['Net Sales'].sum()
+average_net_sales = grouped['Net Sales'].mean()
+
+# Print the results
+print("Total Volume per Brand:\n", total_volume)
+print("\nAverage Volume per Brand:\n", average_volume)
+print("\nTotal Net Sales per Brand:\n", total_net_sales)
+print("\nAverage Net Sales per Brand:\n", average_net_sales)
+
+# Supermarket Performance
+
+# Filter the data for supermarkets only
+df_supermarkets = df[df['Client Type'] == 'Supermarkets']
+
+# Group the data by 'Client'
+grouped = df_supermarkets.groupby('Client')
+
+# Calculate total and average 'Volume' and 'Net Sales' for each supermarket
+total_volume = grouped['Volume'].sum()
+average_volume = grouped['Volume'].mean()
+total_net_sales = grouped['Net Sales'].sum()
+average_net_sales = grouped['Net Sales'].mean()
+
+# Print the results
+print("Total Volume per Supermarket:\n", total_volume)
+print("\nAverage Volume per Supermarket:\n", average_volume)
+print("\nTotal Net Sales per Supermarket:\n", total_net_sales)
+print("\nAverage Net Sales per Supermarket:\n", average_net_sales)
+
+# All retail stores Perfomance
+
+# Group the data by 'Client Type'
+grouped = df.groupby('Client Type')
+
+# Calculate total and average 'Volume' and 'Net Sales' for each client type
+total_volume = grouped['Volume'].sum()
+average_volume = grouped['Volume'].mean()
+total_net_sales = grouped['Net Sales'].sum()
+average_net_sales = grouped['Net Sales'].mean()
+
+# Print the results
+print("Total Volume per Client Type:\n", total_volume)
+print("\nAverage Volume per Client Type:\n", average_volume)
+print("\nTotal Net Sales per Client Type:\n", total_net_sales)
+print("\nAverage Net Sales per Client Type:\n", average_net_sales)
+
+# Discount Impact
+
+# Group the data by 'Brand' and 'Client'
+grouped = df.groupby(['Brand', 'Client'])
+
+# Calculate correlation between 'Discounts' and 'Volume' for each group
+correlations = grouped.apply(lambda x: x['Discounts'].corr(x['Volume']))
+
+# Print the results
+print("Correlation between Discounts and Volume for each Brand and Supermarket:\n", correlations)
+
+# Cost Efficiency
+
+# Group the data by 'Brand' and 'Client Type'
+grouped = df.groupby(['Brand', 'Client Type'])
+
+# Calculate total costs (COGS, distribution, and warehousing) for each group
+total_costs = grouped[['Cost of Goods Sold', 'Distribution', 'Warehousing']].sum().sum(axis=1)
+
+# Calculate total net sales for each group
+total_net_sales = grouped['Net Sales'].sum()
+
+# Calculate the ratio of total costs to net sales
+cost_efficiency = total_costs / total_net_sales
+
+# Print the results
+print("Cost Efficiency for each Brand and Store:\n", cost_efficiency)
+
+# Product Preference:
+
+# Option A.
+# Group the data by 'Brand', 'Client', and 'Size'
+grouped_size = df.groupby(['Brand', 'Client', 'Size'])
+
+# Calculate total 'Volume' for each group
+total_volume_size = grouped_size['Volume'].sum()
+
+# Find the most and least popular product size for each brand and supermarket
+most_popular_size = total_volume_size.idxmax()
+least_popular_size = total_volume_size.idxmin()
+
+# Print the results
+print("Most Popular Product Size for each Brand and Store:\n", most_popular_size)
+print("\nLeast Popular Product Size for each Brand and Store:\n", least_popular_size)
+
+# Option B.
+# Group the data by 'Brand', 'Client', and 'Pack'
+grouped_pack = df.groupby(['Brand', 'Client', 'Pack'])
+
+# Calculate total 'Volume' for each group
+total_volume_pack = grouped_pack['Volume'].sum()
+
+# Find the most and least popular product pack for each brand and supermarket
+most_popular_pack = total_volume_pack.idxmax()
+least_popular_pack = total_volume_pack.idxmin()
+
+# Print the results
+print("Most Popular Product Pack for each Brand and Store:\n", most_popular_pack)
+print("\nLeast Popular Product Pack for each Brand and Store:\n", least_popular_pack)
+

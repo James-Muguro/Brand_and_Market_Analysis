@@ -191,3 +191,85 @@ least_popular_pack = total_volume_pack.idxmin()
 print("Most Popular Product Pack for each Brand and Store:\n", most_popular_pack)
 print("\nLeast Popular Product Pack for each Brand and Store:\n", least_popular_pack)
 
+# Problem Questions
+
+# 1. Which brand has the highest performance in terms of sales volume and net sales across different stores?
+
+# Group the data by 'Brand'
+grouped = df.groupby('Brand')
+
+# Calculate total 'Volume' and 'Net Sales' for each brand
+total_volume = grouped['Volume'].sum()
+total_net_sales = grouped['Net Sales'].sum()
+
+# Find the brand with the highest total volume and net sales
+highest_volume_brand = total_volume.idxmax()
+highest_net_sales_brand = total_net_sales.idxmax()
+
+# Print the results
+print("Brand with the Highest Sales Volume:\n", highest_volume_brand)
+print("\nBrand with the Highest Net Sales:\n", highest_net_sales_brand)
+
+# 2. Which client type (Store) and client (name of store) generates the highest sales volume and net sales for different brands?
+
+# Group the data by 'Brand', 'Client Type', and 'Client'
+grouped = df.groupby(['Brand', 'Client Type', 'Client'])
+
+# Calculate total 'Volume' and 'Net Sales' for each group
+total_volume = grouped['Volume'].sum()
+total_net_sales = grouped['Net Sales'].sum()
+
+# Find the client type and client with the highest total volume and net sales for each brand
+highest_volume_client = total_volume.idxmax()
+highest_net_sales_client = total_net_sales.idxmax()
+
+# Print the results
+print("Client Type and Client with the Highest Sales Volume for each Brand:\n", highest_volume_client)
+print("\nClient Type and Client with the Highest Net Sales for each Brand:\n", highest_net_sales_client)
+
+# 3. How do discounts impact the sales volume of each brand in each Store (Client Type, and Client)?
+
+# Group the data by 'Brand', 'Client Type', and 'Client'
+grouped = df.groupby(['Brand', 'Client Type', 'Client'])
+
+# Calculate correlation between 'Discounts' and 'Volume' for each group
+correlations = grouped.apply(lambda x: x['Discounts'].corr(x['Volume']))
+
+# Print the results
+print("Correlation between Discounts and Volume for each Brand, Client Type, and Client:\n", correlations)
+
+# 4. Which brand and Store have the most cost-efficient operations?
+
+# Group the data by 'Brand', 'Client Type', and 'Client'
+grouped = df.groupby(['Brand', 'Client Type', 'Client'])
+
+# Calculate total costs (COGS, distribution, and warehousing) for each group
+total_costs = grouped[['Cost of Goods Sold', 'Distribution', 'Warehousing']].sum().sum(axis=1)
+
+# Calculate total net sales for each group
+total_net_sales = grouped['Net Sales'].sum()
+
+# Calculate the ratio of total costs to net sales
+cost_efficiency = total_costs / total_net_sales
+
+# Find the brand and store with the most cost-efficient operations
+most_cost_efficient = cost_efficiency.idxmin()
+
+# Print the results
+print("Brand and Store with the Most Cost-Efficient Operations:\n", most_cost_efficient)
+
+# 5. What are the most and least popular product sizes or packs for each brand and store?
+
+# Group the data by 'Brand', 'Client Type', 'Client', and 'Pack'
+grouped_pack = df.groupby(['Brand', 'Client Type', 'Client', 'Pack'])
+
+# Calculate total 'Volume' for each group
+total_volume_pack = grouped_pack['Volume'].sum()
+
+# Find the most and least popular product pack for each brand and store
+most_popular_pack = total_volume_pack.idxmax()
+least_popular_pack = total_volume_pack.idxmin()
+
+# Print the results
+print("Most Popular Product Pack for each Brand and Store:\n", most_popular_pack)
+print("\nLeast Popular Product Pack for each Brand and Store:\n", least_popular_pack)

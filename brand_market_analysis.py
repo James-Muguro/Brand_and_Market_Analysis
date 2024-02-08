@@ -14,6 +14,7 @@ import ipywidgets as widgets
 from IPython.display import display, clear_output
 from tkinter import Tk, filedialog
 import numpy_financial as npf
+import statsmodels.api as sm
 
 # Load the data
 
@@ -347,3 +348,51 @@ cost_efficiency.plot(kind='barh', figsize=(10, 6), color='orange')
 plt.title('Cost Efficiency for each Brand')
 plt.xlabel('Cost Efficiency')  # Change ylabel to xlabel
 plt.show()
+
+# Models
+
+# 1. Regression Model
+
+# Calculate total costs (COGS, distribution, and warehousing)
+df['Total Costs'] = df['Cost of Goods Sold'] + df['Distribution'] + df['Warehousing']
+
+# Define the independent variables (Discounts and Total Costs) and the dependent variable (Net Sales)
+X = df[['Discounts', 'Total Costs']]
+y = df['Net Sales']
+
+# Add a constant to the independent variables matrix
+X = sm.add_constant(X)
+
+# Fit the ordinary least squares (OLS) model
+model = sm.OLS(y, X)
+results = model.fit()
+
+# Print the summary statistics of the regression model
+print(results.summary())
+
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+
+# Calculate VIF for each independent variable
+X = df[['Discounts', 'Total Costs']]
+vif = pd.DataFrame()
+vif["VIF Factor"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
+vif["features"] = X.columns
+
+print(vif)
+
+from sklearn.linear_model import Ridge
+from sklearn.model_selection import train_test_split
+
+# Define the independent variables (Discounts and Total Costs) and the dependent variable (Net Sales)
+X = df[['Discounts', 'Total Costs']]
+y = df['Net Sales']
+
+# Split the data into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit the Ridge Regression model
+ridge = Ridge(alpha=1.0)
+ridge.fit(X_train, y_train)
+
+# Print the coefficients of the model
+print("Coefficients: ", ridge.coef_)

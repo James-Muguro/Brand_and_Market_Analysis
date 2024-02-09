@@ -513,5 +513,44 @@ for brand_code in brands:
     predicted_sales = model.predict([[brand_code]])
     print(f"Predicted Net Sales for {brand_name}: {predicted_sales[0]}")
 
+
 # 5. Random Forest Regressor
     
+# Create a copy of the original dataframe
+df4 = df.copy()
+
+# Initialize the label encoder
+label_encoder = LabelEncoder()
+
+# Create mappings between numerical codes and actual names
+brand_mapping = dict(enumerate(df4['Brand'].astype('category').cat.categories))
+client_type_mapping = dict(enumerate(df4['Client Type'].astype('category').cat.categories))
+
+# Convert categorical variables to numerical using Label Encoding
+df4['Brand'] = label_encoder.fit_transform(df4['Brand'])
+df4['Client Type'] = label_encoder.fit_transform(df4['Client Type'])
+
+# Select features (Brand and Client Type) and target variable (Volume)
+X = df4[['Brand', 'Client Type']]
+y = df4['Volume']
+
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create and train the Random Forest Regression model
+model = RandomForestRegressor(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+# Make predictions on the test set
+y_pred = model.predict(X_test)
+
+# Print the top 10 predictions
+for i, prediction in enumerate(y_pred[:10]):
+    print(f"Prediction {i+1}: {prediction}")
+
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+
+print(f'Mean Squared Error: {mse}')
+print(f'R-squared: {r2}')

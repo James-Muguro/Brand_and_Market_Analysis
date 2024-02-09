@@ -1,5 +1,7 @@
 # To start working with the dataset, we will import the following libraries
 
+# To start working with the dataset, we will import the following libraries
+
 import pandas as pd  # Pandas for data manipulation and analysis
 import numpy as np   # NumPy for numerical operations
 import matplotlib.pyplot as plt  # Matplotlib for basic data visualization
@@ -17,12 +19,14 @@ import numpy_financial as npf
 import statsmodels.api as sm
 from statsmodels.tsa.seasonal import seasonal_decompose
 from sklearn.linear_model import Ridge
-from sklearn.model_selection import train_test_split
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from statsmodels.stats.outliers_influence import variance_inflation_factor
-from mlxtend.frequent_patterns import apriori
-from mlxtend.frequent_patterns import association_rules
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error, r2_score
+from sklearn.preprocessing import LabelEncoder
+from sklearn.tree import DecisionTreeRegressor
 
 # Load the data
 
@@ -472,55 +476,42 @@ df_cluster['Cluster'] = kmeans.labels_
 # Print out the first few rows of the dataframe
 print(df_cluster.head())
 
-# The Collaborative Filtering Approach
+# 4. Decision Tree Regression Model
 
-df['Net Sales'] = df['Net Sales'].astype(float)
+# Create a copy of the original dataframe
+df2 = df.copy()
 
 # Convert categorical variables to category type
-df['Client'] = df['Client'].astype('category')
-df['Client Type'] = df['Client Type'].astype('category')
-df['Brand'] = df['Brand'].astype('category')
+df2['Brand'] = df2['Brand'].astype('category')
 
-# Create mappings between numerical codes and actual names
-client_type_mapping = dict(enumerate(df['Client Type'].cat.categories))
-brand_mapping = dict(enumerate(df['Brand'].cat.categories))
-
-# Convert categorical variables to numerical IDs
-df['Client'] = df['Client'].cat.codes
-df['Client Type'] = df['Client Type'].cat.codes
-df['Brand'] = df['Brand'].cat.codes
-
-# Group by 'Client Type' and 'Brand' and sum 'Net Sales'
-df = df.groupby(['Client Type', 'Brand'])['Net Sales'].sum().reset_index()
+# Group by 'Brand' and sum 'Net Sales'
+df2 = df2.groupby(['Brand'])['Net Sales'].sum().reset_index()
 
 # Split the data into training and testing sets
-train_data, test_data = train_test_split(df, test_size=0.2, random_state=42)
+train_data, test_data = train_test_split(df2, test_size=0.2, random_state=42)
 
-# Create a user-item matrix based on 'Client Type'
-user_item_matrix = pd.pivot_table(train_data, values='Net Sales', index='Client Type', columns='Brand', fill_value=0)
+# Create mappings between numerical codes and actual names
+brand_mapping = dict(enumerate(train_data['Brand'].cat.categories))
 
-# Calculate cosine similarity between users
-user_similarity = cosine_similarity(user_item_matrix)
+# Convert categorical variables to numerical IDs
+train_data['Brand'] = train_data['Brand'].cat.codes
 
-# Function to predict Net Sales for a given user and Brand
-def predict_net_sales(user_type, brand):
-    # Convert numerical indices back to actual names
-    user_type_name = client_type_mapping[user_type]
-    brand_name = brand_mapping[brand]
+# Separate features and target variable
+X_train = train_data.drop('Net Sales', axis=1)
+y_train = train_data['Net Sales']
 
-    user_row = user_item_matrix.loc[user_type_name].values.reshape(1, -1)
-    brand_col = user_item_matrix[brand_name].values.reshape(-1, 1)
-    
-    sim_users = user_similarity[user_type]
-    predicted_net_sales = sim_users.dot(brand_col).flatten()[0] / sim_users.sum()
+# Create and train the model
+model = DecisionTreeRegressor(random_state=42)
+model.fit(X_train, y_train)
 
-    return predicted_net_sales
-
-# Example: Get predictions for a specific client type and Brand
-user_type = df['Client Type'].iloc[0]
-brands = df['Brand'].unique()
+# Get predictions for all brands
+brands = train_data['Brand'].unique()
 
 for brand_code in brands:
-    brand_name = brand_mapping.get(brand_code, f'Unknown Brand {brand_code}')
-    predicted_sales = predict_net_sales(user_type, brand_name)
-    print(f"Predicted Net Sales for Brand {brand_name} and Client Type {client_type_mapping[user_type]}: {predicted_sales}")
+    # Get the actual brand name using the mapping
+    brand_name = brand_mapping[brand_code]
+    predicted_sales = model.predict([[brand_code]])
+    print(f"Predicted Net Sales for {brand_name}: {predicted_sales[0]}")
+
+# 5. Random Forest Regressor
+    

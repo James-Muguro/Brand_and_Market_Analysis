@@ -1,7 +1,5 @@
 # To start working with the dataset, we will import the following libraries
 
-# To start working with the dataset, we will import the following libraries
-
 import pandas as pd  # Pandas for data manipulation and analysis
 import numpy as np   # NumPy for numerical operations
 import matplotlib.pyplot as plt  # Matplotlib for basic data visualization

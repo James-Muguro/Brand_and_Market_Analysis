@@ -1,69 +1,64 @@
-# Feasibility Evaluation Model for Solar-Battery Integration
+# Brand and Market Analysis Project
 
-## Project Description
-This project delves into the practicality of augmenting Naomi’s current solar power system with a battery. By analyzing Naomi’s hourly electricity data from 2020, the model estimates potential solar generation, battery storage, cost savings, and long-term returns. The analysis considers two future electricity price scenarios to provide a comprehensive view of the potential benefits of this sustainable energy solution.
+## Purpose
 
-## Purpose of the Model
-The model’s primary objective is to offer valuable insights into the potential cost savings and financial viability of such an integration. It serves as a tool for understanding the economic implications of adopting a battery system alongside existing solar power infrastructure.
+The Brand and Market Analysis project is designed to offer a detailed examination of brand and market performance, allowing businesses to make informed decisions based on key metrics. By leveraging various models and visualizations, the project aims to uncover patterns, correlations, and efficiency benchmarks within the retail landscape.
 
-## Data Checks and Results
-The dataset undergoes rigorous checks to ensure data completeness and reliability. The following steps are performed:
+## Project Contents
 
-1. **Verification of Data Completeness:**
-   - Ensure all necessary fields are populated.
-   - Handle missing values appropriately.
+### 1. Key Metrics
+   - **Brand Performance:** Total and average sales volume and net sales for each brand.
+   - **Supermarket Performance:** Total and average sales volume and net sales for each supermarket.
+   - **Other Stores Performance:** Total and average sales volume and net sales for each client type.
+   - **Discount Impact:** Correlation between discounts and sales volume for each brand and supermarket.
+   - **Cost Efficiency:** Ratio of total costs (COGS, distribution, and warehousing) to net sales for each brand and supermarket.
+   - **Product Preference:** Most and least popular product size or pack for each brand and supermarket.
 
-2. **Outlier Investigation:**
-   - Identify and address outliers using boxplots.
+### 2. Key Questions Answered
+   - Brand Ranking
+   - Supermarket Influence
+   - Discount Analysis
+   - Cost-Effective Operations
+   - Product Size Preferences
 
-## Assumptions
-The model operates under the following assumptions:
+### 3. Visualizations
+   - **Brand Performance Visualization:** Graphical representation of brand-specific metrics.
+   - **Client Performance Visualization:** Visualize the performance of different client types.
+   - **Discount Impact Visualization:** Illustrate the correlation between discounts and sales volume.
+   - **Cost Efficiency Visualization:** Present the cost efficiency of brands and stores.
 
-- **Electricity Cost:** The cost of electricity per kWh is assumed to be $0.17.
-- **Battery Charge Level:** The maximum battery charge level is set at 100 kWh.
+### 4. Models
+   - **Linear Regression Model:** Understand the relationship between discounts, costs, and sales.
+   - **Time Series Analysis:** Identify seasonal patterns or trends in sales.
+   - **Clustering Model:** Group sales based on cost efficiency.
+   - **Decision Tree Regression Model:** Predict net sales for each brand.
+   - **Random Forest Regressor:** Predict volume for each combination of brand and client type in the test set.
 
-## Data Understanding
-To gain a comprehensive understanding of the dataset, we undertake the following:
+### 5. Value Proposition
+The project serves retail businesses aiming to optimize brand and supermarket performance.
+Data analysts and data scientists can leverage the models and visualizations for actionable insights.
 
-1. **Data Types and Distributions:**
-   - Explore data types and distributions for effective analysis.
+## Usage
 
-2. **Visualization:**
-   - Utilize time-series line plots and histograms for visualization.
+Ensure you have the following libraries installed:
 
-## Modeling Steps and Checks
-The model follows a systematic approach with clear steps and checks:
+```bash
+pip install pandas numpy matplotlib seaborn scikit-learn ipywidgets statsmodels numpy-financial
+```
 
-1. **Average Solar Electricity Generation and Electricity Usage per Hour:**
-   - Calculate and visualize hourly averages.
+## Acknowledgments
 
-2. **Outlier Investigation:**
-   - Utilize boxplots to identify and address outliers.
+Special thanks to the contributors and the open-source community for their valuable input.
 
-3. **Electricity Bought and Excess Solar Electricity Generated:**
-   - Calculate hourly electricity bought and excess solar electricity generated.
+## Project Structure
 
-4. **Cumulative Battery Charge Modeling:**
-   - Model the cumulative charge level of the battery over time.
+The project follows a structured approach with different stages:
 
-5. **Electricity Bought with Battery Installed:**
-   - Calculate electricity bought when a battery is installed.
-
-6. **Savings Calculation:**
-   - Determine the savings from installing a battery.
-
-7. **Monthly Tabulation and Charting:**
-   - Tabulate and visualize monthly solar generation, electricity usage, and purchased electricity.
-
-## Long-Term Projections
-To project future savings, we consider two scenarios of electricity price changes over 20 years.
-
-## Further Checks
-- **Internal Rate of Return (IRR) Calculation:**
-  - Calculate IRR for different scenarios.
-
-- **Additional Metrics:**
-  - Evaluate extra electricity met, implied savings, electricity price with inflation, NPV, and IRR.
+1. **Data Preparation:** Cleaning and organizing the dataset.
+2. **Exploratory Data Analysis (EDA):** Gaining initial insights into the data.
+3. **Models Implementation:** Deployment of regression, time series, clustering, and classification models.
+4. **Visualization Creation:** Developing graphical representations for insights.
+5. **Readme and Documentation:** Detailed project overview, metrics, visualizations, model details, and library dependencies.
 
 ## Conclusion
-This project is dedicated to offering valuable insights into the financial implications of integrating a battery into solar electricity generation. Leveraging the capabilities of Python and key libraries such as NumPy, Pandas, ipywidgets, tkinter, matplotlib, and seaborn, the project benefits from the efficient array manipulation tools provided by the NumPy community and the versatile visualization tools from the developers of matplotlib and seaborn. Throughout the development of this project, online tutorials and responses from the Stack Overflow community have played a crucial role, providing invaluable guidance and support.
+This comprehensive analysis provides actionable insights for businesses, guiding strategies related to pricing, inventory management, and targeted marketing campaigns within the retail landscape.

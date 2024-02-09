@@ -361,6 +361,29 @@ plt.title('Cost Efficiency for each Brand')
 plt.xlabel('Cost Efficiency')  # Change ylabel to xlabel
 plt.show()
 
+# Create a copy of the DataFrame to avoid overwriting the original dataset
+df5 = df.copy()
+
+# Take absolute values of the cost-related variables
+df5[['Cost of Goods Sold', 'Distribution', 'Warehousing']] = df5[['Cost of Goods Sold', 'Distribution', 'Warehousing']].abs()
+
+# Group by Client Type, Brand, and Client and sum the cost-related variables
+grouped_df = df5.groupby(['Client Type', 'Brand', 'Client'])[['Cost of Goods Sold', 'Distribution', 'Warehousing']].sum().reset_index()
+
+# Melt the DataFrame for better visualization
+melted_df = pd.melt(grouped_df, id_vars=['Client Type', 'Brand', 'Client'], value_vars=['Cost of Goods Sold', 'Distribution', 'Warehousing'])
+
+# Plotting the total cost (absolute values) per Client Type, Brand, and Client
+plt.figure(figsize=(12, 8))
+sns.barplot(x='Client Type', y='value', hue='Brand', data=melted_df, ci=None)
+plt.title('Total Cost per Client Type, Brand, and Client')
+plt.xlabel('Client Type')
+plt.ylabel('Total Cost (Absolute Values)')
+plt.legend(title='Brand', bbox_to_anchor=(1.05, 1), loc='upper left')
+
+# Show the plot
+plt.show()
+
 # Models
 
 # 1. Regression Model

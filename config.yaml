@@ -1,0 +1,60 @@
+data:
+  date_columns: ['Period']
+  time_column: 'period'
+  numeric_columns: ['Gross Sales','Net Sales','Volume','Discounts','Cost of Goods Sold','Distribution','Warehousing']
+  text_column: 'review_text' # Example, assuming there's a column with customer reviews
+
+analysis:
+  brand_performance:
+    enabled: true
+    value_col: 'net_sales'
+  client_performance:
+    enabled: true
+    value_col: 'net_sales'
+  discount_impact:
+    enabled: true
+  cost_efficiency:
+    enabled: true
+  segmentation:
+    enabled: true
+    model: 'kmeans' # 'kmeans' or 'dbscan'
+    features: ['net_sales', 'volume', 'discounts']
+    n_clusters: 4
+    model_params: {}
+
+benchmarking:
+  enabled: true
+  metric: 'net_sales'
+  brand_col: 'brand'
+
+forecast:
+  enabled: true
+  model: 'ets' # 'ets', 'arima', or 'prophet'
+  target_column: 'net_sales'
+  periods: 12
+  model_params:
+    seasonal: 'add'
+    trend: 'add'
+
+recommendations:
+  enabled: true
+  model: 'logistic_regression' # Currently supported: 'logistic_regression'
+
+sentiment:
+  enabled: false # Disabled by default, as we don't have review data yet
+  text_column: 'review_text'
+  engine: 'vader'
+
+scenario:
+  enabled: true
+  impact_params:
+    price_change_pct: 0.1
+    marketing_spend_increase: 10000
+    price_elasticity: -1.2
+    marketing_elasticity: 0.3
+
+currency:
+  target: 'USD'
+  rates:
+    KES: 0.0071
+    USD: 1.0

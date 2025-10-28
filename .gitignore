@@ -1,0 +1,6 @@
+# Ignore Jupyter notebooks and other local artifacts
+*.ipynb
+.ipynb_checkpoints/
+.DS_Store
+*.pyc
+__pycache__/
